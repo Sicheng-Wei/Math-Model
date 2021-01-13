@@ -1,10 +1,10 @@
 V_integrate(1000,1000,1,0.03,0,0.2);
 
 function [] = V_integrate(T,N,R,v0,tinf,tsup)
-%V-INTEGRATE ¼¯³Éº¯Êı
-%²ÎÊıËµÃ÷£º
-%N - ¼¯ÈºÊıÄ¿£»R - ÓãÈº¸öÌåÓ°Ïì°ë¾¶£»v0 - »ù´¡ËÙ¶È£»tinf,tsup - ÔëÉù·¶Î§
-    %% ¸÷²ÎÊı³õÊ¼»¯
+%V-INTEGRATE é›†æˆå‡½æ•°
+%å‚æ•°è¯´æ˜ï¼š
+%N - é›†ç¾¤æ•°ç›®ï¼›R - é±¼ç¾¤ä¸ªä½“å½±å“åŠå¾„ï¼›v0 - åŸºç¡€é€Ÿåº¦ï¼›tinf,tsup - å™ªå£°èŒƒå›´
+    %% å„å‚æ•°åˆå§‹åŒ–
     x = 1 + 8 * rand(N,1);
     y = 1 + 8 * rand(N,1);
     angle = 2 * pi * rand(N,1);
@@ -13,7 +13,7 @@ function [] = V_integrate(T,N,R,v0,tinf,tsup)
         velo(i) = v0;
     end
     
-    %% ²Ù×÷º¯Êı¼¯
+    %% æ“ä½œå‡½æ•°é›†
     for i = 1:T
         Vplot(x,y,angle,i);
         [x,y,angle,velo] = Basic_Vicsek(N,R,tinf,tsup,x,y,angle,velo);
@@ -23,7 +23,7 @@ function [] = V_integrate(T,N,R,v0,tinf,tsup)
     
 end
 
-%% »æÍ¼
+%% ç»˜å›¾
 function[] = Vplot(x,y,angle,times)
     quiver(x,y,0.2 * cos(angle),0.2 * sin(angle),'AutoScale','off');
     axis([-1,11,-1,11]);
@@ -32,14 +32,14 @@ function[] = Vplot(x,y,angle,times)
     pause(0.03);
 end
 
-%% Vicsek»ù´¡Ä£ĞÍ
+%% VicsekåŸºç¡€æ¨¡å‹
 function [x,y,angle,velo] = Basic_Vicsek(N,R,tinf,tsup,x,y,angle,velo)
     x = x + velo .* cos(angle);
     y = y + velo .* sin(angle);
     regangle = angle;
     for i = 1:N
         unit = sqrt((x - x(i)).^2 + (y - y(i)).^2);
-        index = unit <= R^2;
+        index = find(unit <= R^2);
         sumCos = sum(cos(regangle(index)));
         sumSin = sum(sin(regangle(index)));
         angle(i) = atan2(sumSin,sumCos) + (tsup - tinf) * rand(1,1) - tinf;
