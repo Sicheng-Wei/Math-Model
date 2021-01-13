@@ -1,10 +1,10 @@
 V_integrate(1000,3000,1,0.08,0,0);
 
 function [] = V_integrate(T,N,R,v0,tinf,tsup)
-%V-INTEGRATE ¼¯³Éº¯Êı
-%²ÎÊıËµÃ÷£º
-%N - ¼¯ÈºÊıÄ¿£»R - ÓãÈº¸öÌåÓ°Ïì°ë¾¶£»v0 - »ù´¡ËÙ¶È£»tinf,tsup - ÔëÉù·¶Î§
-    %% ¸÷²ÎÊı³õÊ¼»¯
+%V-INTEGRATE é›†æˆå‡½æ•°
+%å‚æ•°è¯´æ˜ï¼š
+%N - é›†ç¾¤æ•°ç›®ï¼›R - é±¼ç¾¤ä¸ªä½“å½±å“åŠå¾„ï¼›v0 - åŸºç¡€é€Ÿåº¦ï¼›tinf,tsup - å™ªå£°èŒƒå›´
+    %% å„å‚æ•°åˆå§‹åŒ–
     x = -10 + 30 * rand(N,1);
     y = -5 + 20 * rand(N,1);
     angle = 2 * pi * rand(N,1);
@@ -13,13 +13,13 @@ function [] = V_integrate(T,N,R,v0,tinf,tsup)
         velo(i) = v0;
     end
     
-    %% ²Ù×÷º¯Êı¼¯
+    %% æ“ä½œå‡½æ•°é›†
     for i = 1:T
         hold on
         Vplot(x,y,angle,i);
         [x,y,angle,velo] = Hunter_Threat(x,y,angle,velo,i);
         [x,y,angle,velo] = Basic_Vicsek(N,R,tinf,tsup,x,y,angle,velo);
-        %Æ£¾ë²ÎÊı
+        %ç–²å€¦å‚æ•°
         indexFast = find(velo > v0);
         velo(indexFast) = velo(indexFast) - 0.02;
         hold off
@@ -27,17 +27,17 @@ function [] = V_integrate(T,N,R,v0,tinf,tsup)
     end
 end
 
-%% »æÍ¼
+%% ç»˜å›¾
 function[] = Vplot(x,y,angle,times)
     quiver(x,y,0.3 * cos(angle),0.3 * sin(angle),'AutoScale','off');
     xh = -10 + 0.2 * times; yh = 5;
     quiver(xh,yh,1,0);
     
-    %ÁÚ½ÓÇø
+    %é‚»æ¥åŒº
     theta = linspace(0,2 * pi,10000);
     C1 = xh + 3 * cos(theta); C2 = yh + 3 * sin(theta);
     plot(C1,C2,'g');
-    %ÊÓÒ°Çø
+    %è§†é‡åŒº
     alpha = linspace(-pi/2,pi/2,1000);
     C3 = xh + 6 * cos(alpha); C4 = yh + 6 * sin(alpha);
     plot(C3,C4,'g');
@@ -48,7 +48,7 @@ function[] = Vplot(x,y,angle,times)
     pause(0.10);
 end
 
-%% Vicsek»ù´¡Ä£ĞÍ
+%% VicsekåŸºç¡€æ¨¡å‹
 function [x,y,angle,velo] = Basic_Vicsek(N,R,tinf,tsup,x,y,angle,velo)
     x = x + velo .* cos(angle);
     y = y + velo .* sin(angle);
@@ -63,16 +63,16 @@ function [x,y,angle,velo] = Basic_Vicsek(N,R,tinf,tsup,x,y,angle,velo)
     end
 end
 
-%% Vicsek²¶Ê³ÕßÏîĞŞÕı
+%% Vicsekæ•é£Ÿè€…é¡¹ä¿®æ­£
 function[x,y,angle,velo] = Hunter_Threat(x,y,angle,velo,times)
     xh = -10 + 0.2 * times; yh = 5; escv = 0.03;
     dangle = atan2(y - yh,x - xh);
     adjacent = sqrt((x - xh).^2 + (y - yh).^2);
-    %ÁÚ½ÓÇøĞŞÕı
+    %é‚»æ¥åŒºä¿®æ­£
     indexAD = find(adjacent <= 3);
     angle(indexAD) = dangle(indexAD);
-    velo(indexAD) = (3 - adjacent(indexAD)) * 0.13 + 0.08;
-    %ÊÓÒ°ÇøĞŞÕı
+    velo(indexAD) = (3 - adjacent(indexAD)) * 0.13 + 0.07;
+    %è§†é‡åŒºä¿®æ­£
     inVSp = find(adjacent <= 6 & dangle < pi / 2 & dangle > 0);
     vxp = velo(inVSp).* cos(angle(inVSp)) + escv * cos(dangle(inVSp)).* cos(dangle(inVSp) + pi / 2);
     vyp = velo(inVSp).* sin(angle(inVSp)) + escv * cos(dangle(inVSp)).* sin(dangle(inVSp) + pi / 2);
